@@ -1,4 +1,5 @@
 export interface SquareProps {
     value: string,
-    handleClick: () => void
+    handleClick: () => void,
+    isWinnerPlacement: boolean
 };

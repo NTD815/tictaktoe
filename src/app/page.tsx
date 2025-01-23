@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SquareProps } from "@/types/ttt"
 
 export default function Board() {
@@ -23,8 +23,12 @@ export default function Board() {
   const [currentStep, setCurrentStep] = useState(9);
 
   const [leadingMark, setLeadingMark] = useState<string>('');
-  // console.log(boardState)
-  // console.log(lastMove)
+
+  const [winnerPlacements, setWinnerPlacements] = useState<number[]>([]);
+
+  const [isReplaying, setIsReplaying] = useState(false);
+
+  const replayProgress = useRef(0);
 
   useEffect(() => {
     if(gameSteps.length >= 5){
@@ -149,6 +153,11 @@ export default function Board() {
 }
 
   const resetBoard = () => {
+
+    if(isReplaying){
+      alert("Cannot reset during replay");
+      return;
+    }
     setBoardState(() => {
       return [
         ['', '', ''],
@@ -179,6 +188,10 @@ export default function Board() {
     setLeadingMark('');
 
     setWinner('');
+
+    setWinnerPlacements(() => {
+      return [];
+    });
   }
 
   const jumpToStep = (step: number) => {
@@ -197,6 +210,13 @@ export default function Board() {
     for(let i = 0; i < 3; i++){
       if(boardState[i][0] && boardState[i][0] == boardState[i][1] && boardState[i][0] == boardState[i][2]){
         setWinner(boardState[i][0]);
+        setWinnerPlacements(() => {
+          return [
+            3*i + 0,
+            3*i + 1,
+            3*i + 2
+          ];
+        });
         return;
       }
     }
@@ -205,6 +225,13 @@ export default function Board() {
     for(let i = 0; i < 3; i++){
         if(boardState[0][i] && boardState[0][i] == boardState[1][i] && boardState[0][i] == boardState[2][i]){
           setWinner(boardState[0][i]);
+          setWinnerPlacements(() => {
+            return [
+              3*0 + i,
+              3*1 + i,
+              3*2 + i
+            ];
+          });
           return;
         }
     }
@@ -214,16 +241,49 @@ export default function Board() {
     
     if(boardState[0][0] && boardState[0][0] == boardState[1][1] && boardState[0][0] == boardState[2][2]){
         setWinner(boardState[0][0]);
+        setWinnerPlacements(() => {
+          return [0, 4, 8];
+        });
         return;
     }
     
     //right diagonal
     if(boardState[0][2] && boardState[0][2] == boardState[1][1] && boardState[0][2] == boardState[2][0]){
         setWinner(boardState[0][2]);
+        setWinnerPlacements(() => {
+          return [2, 4, 6];
+        });
         return;
     }
   }
 
+  const replay = () => {
+    setIsReplaying(true);
+    setBoardState(() => {
+      return [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+      ];
+    });
+    let wps = structuredClone(winnerPlacements);
+    setWinnerPlacements(() => {
+      return [];
+    });
+    for(let i = 0; i < gameSteps.length; i++){
+      setTimeout(() => {
+        replayProgress.current = 100/gameSteps.length * (i + 1);
+        jumpToStep(i);
+        if(i == gameSteps.length - 1) {
+          setIsReplaying(false);
+          replayProgress.current = 0;
+          setWinnerPlacements(() => {
+            return wps;
+          });
+        }
+      }, 1000 + i * 1000);
+    }    
+  }
 
   return <>
     <div id="game_screen" className="h-screen flex items-center justify-center">
@@ -237,7 +297,7 @@ export default function Board() {
             return (
             <div className="board-row" key={rowIdx}>
               {row.map((cell, colIdx) => {
-                return <Square value={cell} key={colIdx} handleClick={() => placeMarker(rowIdx, colIdx)}/>
+                return <Square value={cell} key={colIdx} handleClick={() => placeMarker(rowIdx, colIdx)} isWinnerPlacement={winnerPlacements.includes(3*rowIdx + colIdx)}/>
               })}
             </div>
             );
@@ -246,14 +306,16 @@ export default function Board() {
       </div>
 
       <div className="min-w-[500px] min-h-[500px] relative left-10">
-          <div className="m-2 p-2 flex justify-end">
+          <div className="m-2 p-2 flex justify-end gap-2">
             <button onClick={resetBoard} className="border bg-black text-white p-2 rounded-md reset-btn">Reset</button>
+            {(winner || gameSteps.length == 9 ) && <button onClick={replay} className={"border bg-black text-white p-2 rounded-md reset-btn"}>Replay</button>}
           </div>
+          {isReplaying && <progress value={replayProgress.current} max="100"></progress>}
           <div className="border m-2 px-10 py-3 min-h-[200px]">
-            <h1 className="text-2xl font-bold text-white underline">Step Ladder</h1>
+            <h1 className="text-2xl font-bold text-white underline">Game Ladder</h1>
             <div className="my-5">
               {gameSteps.map((step, idx) => {
-                return <p key={idx} onClick={()=> jumpToStep(idx)} className={"cursor-pointer text-lg text-white underline" + ` ml-${idx+1}`}>Step {idx + 1}</p>
+                return <p key={idx} onClick={()=> jumpToStep(idx)} className={"cursor-pointer text-lg text-white underline" + ` ml-${idx+1}`}>Move {idx + 1}</p>
               })}
             </div>
           </div>
@@ -263,8 +325,8 @@ export default function Board() {
 }
 
 
-function Square({value, handleClick} : SquareProps) {
-  return <button className="square" onClick={handleClick}>
+function Square({value, handleClick, isWinnerPlacement} : SquareProps) {
+  return <button className={"square" + (isWinnerPlacement ? " winner-placement" : "")} onClick={handleClick}>
     <span className={value?"opacity-100":"opacity-0"}>{value ?value: 'H'}</span>
   </button>
 }

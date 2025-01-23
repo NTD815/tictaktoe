@@ -74,6 +74,13 @@ body {
   font-weight: bold;
   color: rgb(23, 25, 135);
 }
+.Imperial .winner-placement{
+  box-shadow: 
+    0 0 5px #ff005d,    /* Inner glow */
+    0 0 10px #ff00b3,   /* Outer glow */
+    0 0 20px #ee7c89,   /* Larger glow */
+    0 0 40px #e873bf; 
+}
 
 
 
@@ -106,7 +113,13 @@ body {
   font-weight: bold;
   color: rgb(255, 117, 71);
 }
-
+.Chomie .winner-placement{
+  box-shadow: 
+    0 0 5px #00ffff,    /* Inner glow */
+    0 0 10px #00ffff,   /* Outer glow */
+    0 0 20px #00ffff,   /* Larger glow */
+    0 0 40px #00ffcc; 
+}
 
 
 
@@ -141,4 +154,28 @@ body {
   background-color: rgb(241, 197, 144);
   font-weight: bold;
   color: rgb(135, 72, 23);
+}
+.Retro .winner-placement{
+  box-shadow: 
+    0 0 5px #00ffff,    /* Inner glow */
+    0 0 10px #00ffff,   /* Outer glow */
+    0 0 20px #00ffff,   /* Larger glow */
+    0 0 40px #00ffcc; 
+}
+
+progress {
+  border-radius: 7px; 
+  width: 100%;
+  height: 5px;
+  box-shadow: 1px 1px 4px rgba( 0, 0, 0, 0.2 );
+}
+progress::-webkit-progress-bar {
+  background-color: yellow;
+  border-radius: 7px;
+}
+progress::-webkit-progress-value {
+  background-color: blue;
+  border-radius: 7px;
+  box-shadow: 1px 1px 5px 3px rgba( 255, 0, 0, 0.8 );
+  transition: width 0.3s;
 }

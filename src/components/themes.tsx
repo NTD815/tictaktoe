@@ -15,7 +15,6 @@ export default function Themes() {
         prevTheme.current = selectedTheme;
     }, [selectedTheme]);
 
-    console.log(themes)
     return (
         <div className={"absolute top-10 right-10 lg:w-[400px] " + `theme-banner-${selectedTheme}`}>
             <h3 className="text-xl font-bold mx-5 pt-3 text-white">Board Themes</h3>
