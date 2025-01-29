@@ -1,20 +1,18 @@
-// middleware/auth.js
-import jwt from 'jsonwebtoken';
+// middleware/authenticateToken.js
 
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+const authenticateToken = async (req, res, next) => {
+    const token = req.cookies.accessToken;
     
     if (!token) {
-        return res.status(401).json({ error: 'Access denied. No token provided.' });
+        return res.status(401).json({ error: 'Unauthorized.' });
     }
 
     try {
-        const verified = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const verified = await utils.auth.verifyTokenAsync(token, process.env.ACCESS_TOKEN_SECRET);
         req.user = verified;
         next();
     } catch (err) {
-        res.status(403).json({ error: 'Invalid token.' });
+        res.status(401).json({ error: 'Invalid token.' });
     }
 };
 

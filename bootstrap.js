@@ -1,7 +1,10 @@
 import dotenv from 'dotenv';
 import connectDB from './db/db_connect.js';
+import * as utils from "./tictactoe/utils/utils.js";
 
 dotenv.config();
+
+global.utils = utils;
 
 export default async function bootstrap() {
 

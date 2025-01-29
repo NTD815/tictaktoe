@@ -41,9 +41,23 @@ router.post("/login", async (req, res) => {
     }
 
     try {
-        const loginData = await authService.login(req.body);
+        const [accessToken, refreshToken] = await authService.login(req.body);
 
-        return res.status(200).json(loginData);
+        //set cookie with refresh and access tokens
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true, 
+            // secure: true, 
+            // sameSite: 'Strict', // Prevent CSRF
+            maxAge: 15 * 60 * 1000 // Set expiration time (15 minutes)
+        });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true, 
+            // secure: true, 
+            // sameSite: 'Strict', // Prevent CSRF
+            maxAge: 15 * 60 * 1000 // Set expiration time (15 minutes)
+        });
+
+        return res.status(200).json({});
     }catch(err){
         return res.status(err.status).json({
             error: err.message
@@ -51,7 +65,42 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.get("/profile", authenticateToken, (req, res) => {
+router.post("/refresh", async (req, res) => {
+
+    const refreshToken = req.cookies?.refreshToken;
+    
+    if(!refreshToken) {
+        return res.status(400).json({
+            error: "Refresh token is required."
+        });
+    }
+
+    try {
+        const [accessToken, refreshToken] = await authService.refreshToken(refreshToken);
+
+        //set cookie with refresh and access tokens
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true, 
+            // secure: true, 
+            // sameSite: 'Strict', // Prevent CSRF
+            maxAge: 15 * 60 * 1000 // Set expiration time (15 minutes)
+        });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true, 
+            // secure: true, 
+            // sameSite: 'Strict', // Prevent CSRF
+            maxAge: 15 * 60 * 1000 // Set expiration time (15 minutes)
+        });
+
+        return res.status(200).json({});
+    }catch(err) {
+        return res.status(err.status).json({
+            error: err.message
+        });
+    }
+});
+
+router.get("/me", authenticateToken, (req, res) => {
     res.status(200).json(req.user);
 });
 
