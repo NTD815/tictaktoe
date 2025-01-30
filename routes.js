@@ -104,4 +104,8 @@ router.get("/me", authenticateToken, (req, res) => {
     res.status(200).json(req.user);
 });
 
+router.get("/test", (req, res) => {
+    res.status(200).json({"test": "test"});
+});
+
 export default router

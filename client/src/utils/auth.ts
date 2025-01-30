@@ -8,6 +8,20 @@ export const refreshToken = async () => {
   }
 };
 
+export const verifyAuth = async () => {
+    await api.get("/me");
+}
+
 export const signOut = () => {
-    //
+    console.log("redirecting to login...")
+    localStorage.removeItem("isLoggedIn");
+    window.location.href = "/auth/login";
+}
+
+export const setAuthStatus = () => {
+    localStorage.setItem("isLoggedIn", "true");
+}
+
+export const getAuthStatus = () => {
+    return localStorage.getItem("isLoggedIn") === "true";
 }

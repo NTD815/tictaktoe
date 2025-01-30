@@ -24,7 +24,7 @@ const login = async ({username, password}) => {
     //check password
     const passwordIsCorrect = await bcrypt.compare(password, user.password);
     if(!passwordIsCorrect){
-        utils.errors.throwErrWithStatusCode("Invalid password", 401);
+        utils.errors.throwErrWithStatusCode("Invalid password", 400);
     }
 
     try{

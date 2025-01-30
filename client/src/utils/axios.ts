@@ -10,9 +10,10 @@ api.interceptors.response.use(
     (response) => response, // Return response normally
     async (error) => {
       const originalRequest = error.config;
-  
+      
       // If unauthorized (401), try refreshing the token
       if (error.response?.status === 401 && !originalRequest._retry) {
+        console.log("inside interceptor if cuz error is 401")
         originalRequest._retry = true; // Prevent infinite loops
   
         try {
@@ -26,6 +27,6 @@ api.interceptors.response.use(
   
       return Promise.reject(error);
     }
-  );
+);
 
 export default api;
