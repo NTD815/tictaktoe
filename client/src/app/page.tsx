@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import api from "@/utils/axios";
 import AuthGuard from "@/components/authguard";
+import Link from 'next/link';
 
 export default function Home() {
 
@@ -15,6 +16,7 @@ export default function Home() {
     return (
         <AuthGuard>
             <div>
+                <Link href="/game">Game</Link>
                 Homepage they call me iykwim
             </div>
         </AuthGuard>

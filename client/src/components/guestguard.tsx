@@ -1,16 +1,25 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { getAuthStatus } from "@/utils/auth";
-import Navigator from "./navigator";
+import { useRouter } from "next/navigation";
 
 const GuestGuard = ({ children }: { children: React.ReactNode }) => {
-    const isAuthenticated = getAuthStatus();
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+
+    useEffect(() => {
+      if(getAuthStatus()){
+        router.push('/');
+      }else{
+        setLoading(false);
+      }
+    }, [router]);
+    
   
-    if (isAuthenticated) {
-      return <Navigator to="/" />;
-    }
+    if (loading) return null;
   
     return children;
-  };
+};
 
 export default GuestGuard;

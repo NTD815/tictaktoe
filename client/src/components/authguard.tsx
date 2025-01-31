@@ -1,35 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { verifyAuth } from "@/utils/auth";
-import Loader from "./loader";
+import { useState, useEffect } from 'react';
+import { getAuthStatus } from "@/utils/auth";
+import { useRouter } from "next/navigation";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-    const [isLoading, setIsLoading] = useState(true);
-  
-    useEffect(() => {
-      const checkAuth = async () => {
-        try {
-          // Quick token validation or lightweight auth check
-          await verifyAuth();
-        } catch (error) {
-        //   signOut();
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      
-      checkAuth();
-    }, []);
-  
-    if (isLoading) {
-      return <Loader />; // Or whatever loading state you prefer
-    }
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-    //Redirection to login page is handle in the Axios interceptor and will be handled there itself
-    //along with the retry login, so no need to handle it here
+  useEffect(() => {
+    if(!getAuthStatus()){
+      router.push('/auth/login');
+    }else{
+      setLoading(false);
+    }
+    
+  }, [router]);
   
-    return children;
-  };
+
+  if (loading) return null;
+
+  return children;
+};
 
 export default AuthGuard;

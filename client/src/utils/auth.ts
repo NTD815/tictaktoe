@@ -3,6 +3,7 @@ import api from "./axios";
 export const refreshToken = async () => {
   try {
     await api.post("/refresh"); 
+    setAuthStatus();
   } catch (error) {
     throw new Error("Failed to refresh token");
   }
@@ -19,9 +20,15 @@ export const signOut = () => {
 }
 
 export const setAuthStatus = () => {
+    if (typeof window === "undefined") {
+        return false; 
+    }
     localStorage.setItem("isLoggedIn", "true");
 }
 
 export const getAuthStatus = () => {
+    if (typeof window === "undefined") {
+        return false; // Prevent access on the server
+    }
     return localStorage.getItem("isLoggedIn") === "true";
 }

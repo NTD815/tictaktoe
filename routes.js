@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
             httpOnly: true, 
             // secure: true, 
             // sameSite: 'Strict', // Prevent CSRF
-            maxAge: 15 * 60 * 1000 // Set expiration time (15 minutes)
+            maxAge: 24 * 60 * 60 * 1000 // Set expiration time (1 Day)
         });
 
         return res.status(200).json({});
@@ -76,7 +76,7 @@ router.post("/refresh", async (req, res) => {
     }
 
     try {
-        const [accessToken, refreshToken] = await authService.refreshToken(refreshToken);
+        const [accessToken, refToken] = await authService.refreshToken(refreshToken);
 
         //set cookie with refresh and access tokens
         res.cookie('accessToken', accessToken, {
@@ -85,11 +85,11 @@ router.post("/refresh", async (req, res) => {
             // sameSite: 'Strict', // Prevent CSRF
             maxAge: 15 * 60 * 1000 // Set expiration time (15 minutes)
         });
-        res.cookie('refreshToken', refreshToken, {
+        res.cookie('refreshToken', refToken, {
             httpOnly: true, 
             // secure: true, 
             // sameSite: 'Strict', // Prevent CSRF
-            maxAge: 15 * 60 * 1000 // Set expiration time (15 minutes)
+            maxAge: 24 * 60 * 60 * 1000 // Set expiration time (1 Day)
         });
 
         return res.status(200).json({});

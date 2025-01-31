@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "server": "node --watch --trace-warnings index.js",
+    "serve": "concurrently \"node --watch --trace-warnings index.js\" \"cd ./client && npm run dev\"",
     "migrate": "cd ./db && node migrate.js",
     "migrate:rollback": "cd ./db && node migrate.js --down",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,5 +24,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
