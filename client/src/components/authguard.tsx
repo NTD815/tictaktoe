@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getAuthStatus } from "@/utils/auth";
 import { useRouter } from "next/navigation";
+import Navbar from './navbar';
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
@@ -10,7 +11,7 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if(!getAuthStatus()){
-      router.push('/auth/login');
+      router.push('/login');
     }else{
       setLoading(false);
     }
@@ -20,7 +21,14 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
 
   if (loading) return null;
 
-  return children;
+  return (
+    <div>
+        <Navbar />
+        <div className="main">
+          {children}
+        </div>
+    </div>
+  );
 };
 
 export default AuthGuard;

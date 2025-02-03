@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import api from "@/utils/axios";
 import AuthGuard from "@/components/authguard";
 import Link from 'next/link';
+import { socket } from "@/utils/socket";
 
 export default function Home() {
 
@@ -13,10 +14,15 @@ export default function Home() {
         });
     }, []);
 
+    useEffect(() => {
+        socket.connect();
+
+        return () => { socket.disconnect() };
+    }, [])
+
     return (
         <AuthGuard>
             <div>
-                <Link href="/game">Game</Link>
                 Homepage they call me iykwim
             </div>
         </AuthGuard>

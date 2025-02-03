@@ -16,7 +16,7 @@ export const verifyAuth = async () => {
 export const signOut = () => {
     console.log("redirecting to login...")
     localStorage.removeItem("isLoggedIn");
-    window.location.href = "/auth/login";
+    window.location.href = "/login";
 }
 
 export const setAuthStatus = () => {

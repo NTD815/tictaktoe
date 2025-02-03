@@ -16,7 +16,7 @@ export default function Themes() {
     }, [selectedTheme]);
 
     return (
-        <div className={"absolute top-10 right-10 lg:w-[400px] " + `theme-banner-${selectedTheme}`}>
+        <div className={"md:absolute top-10 right-10 lg:w-[400px] " + `theme-banner-${selectedTheme}`}>
             <h3 className="text-xl font-bold mx-5 pt-3 text-white">Board Themes</h3>
             <div className={"flex gap-10 p-5"}>
             {

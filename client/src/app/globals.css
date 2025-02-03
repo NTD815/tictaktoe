@@ -26,14 +26,10 @@ body {
 }
 
 .square{
-  border: 1px solid black;
   font-weight: bold;
-  /* padding: 0.6rem; */
-  height: 100px;
-  width: 100px;
   box-sizing: content-box !important;
   font-size: xx-large;
-  margin: 10px;
+  /* margin: 10px; */
 }
 
 .theme-banner-Imperial{
@@ -57,12 +53,6 @@ body {
 .Imperial .square{
   border: 1px solid rgb(179, 237, 255);
   background-color: rgb(9, 25, 84);
-  font-weight: bold;
-  /* padding: 0.6rem; */
-  height: 100px;
-  width: 100px;
-  font-size: xx-large;
-  margin: 10px;
 }
 .Imperial .square:hover{
   background-color: rgb(199, 251, 244);
@@ -96,12 +86,6 @@ body {
 .Chomie .square{
   border: 1px solid rgb(121, 240, 24);
   background-color: rgb(255, 117, 71);
-  font-weight: bold;
-  /* padding: 0.6rem; */
-  height: 100px;
-  width: 100px;
-  font-size: xx-large;
-  margin: 10px;
 }
 .Chomie .square:hover{
   background-color: rgb(237, 183, 165);
@@ -136,12 +120,6 @@ body {
 .Retro .square{
   border: 1px solid rgb(246, 172, 0);
   background-color: rgb(241, 197, 144);
-  font-weight: bold;
-  /* padding: 0.6rem; */
-  height: 100px;
-  width: 100px;
-  font-size: xx-large;
-  margin: 10px;
 }
 
 .Retro .square:hover{
@@ -178,4 +156,16 @@ progress::-webkit-progress-value {
   border-radius: 7px;
   box-shadow: 1px 1px 5px 3px rgba( 255, 0, 0, 0.8 );
   transition: width 0.3s;
+}
+
+.background_cross_pattern{
+  background:
+  radial-gradient(circle, transparent 20%, rgb(108, 23, 45) 20%,
+  rgb(108, 23, 45) 80%, transparent 80%, transparent),
+  radial-gradient(circle, transparent 20%, rgb(108, 23, 45) 20%,
+  rgb(108, 23, 45) 80%, transparent 80%, transparent) 50px 50px,
+  linear-gradient(#a55f0f 8px, transparent 8px) 0 -4px,
+  linear-gradient(90deg, #a55f0f 8px, transparent 8px) -4px 0;
+  background-color: rgb(108, 23, 45);
+  background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
 }

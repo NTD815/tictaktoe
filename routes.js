@@ -65,6 +65,12 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.post('/logout', (req, res) => {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.status(200).json({});
+});
+
 router.post("/refresh", async (req, res) => {
 
     const refreshToken = req.cookies?.refreshToken;

@@ -13,7 +13,7 @@ import router from "./routes.js";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: "*" } });
+const io = new Server(httpServer, { cors: { origin: "http://localhost:3000" } });
 
 // Enable CORS
 app.use(cors({

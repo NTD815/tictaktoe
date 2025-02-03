@@ -1,12 +1,15 @@
 "use client";
 
 import Themes from "@/components/themes";
+import AuthGuard from "@/components/authguard";
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="text-white">
-            <Themes />
-            {children}
-        </div>
+        <AuthGuard>
+            <div className="text-white relative">
+                <Themes />
+                {children}
+            </div>
+        </AuthGuard>
         );
 }

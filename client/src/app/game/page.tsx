@@ -286,39 +286,43 @@ export default function Board() {
   }
 
   return <>
-    <div id="game_screen" className="h-screen flex items-center justify-center">
+    <div id="game_screen" className="h-screen flex flex-col md:flex-row items-center justify-center">
       
-      <div className="w-fit max-w-[50%] board">
-      <h1 className="text-4xl font-bold absolute top-[15%] text-white">
-        {winner ? `Winner: ${winner}` : gameSteps.length < 9 ? `Player: ${currentTurn()}` : 'Game over'}
-      </h1>
-        <div className="my-2">
+      <div className="w-fit board relative">
+        <h1 className="text-4xl font-bold absolute top-[-30%] md:top-[-20%] text-white">
+            {winner ? `Winner: ${winner}` : gameSteps.length < 9 ? `Player: ${currentTurn()}` : 'Game over'}
+        </h1>
+        <div className="">
           {boardState.map((row, rowIdx) => {
-            return (
-            <div className="board-row" key={rowIdx}>
+              return (
+              <div className="board-row" key={rowIdx}>
               {row.map((cell, colIdx) => {
-                return <Square value={cell} key={colIdx} handleClick={() => placeMarker(rowIdx, colIdx)} isWinnerPlacement={winnerPlacements.includes(3*rowIdx + colIdx)}/>
+                  return <Square value={cell} key={colIdx} handleClick={() => placeMarker(rowIdx, colIdx)} isWinnerPlacement={winnerPlacements.includes(3*rowIdx + colIdx)}/>
               })}
-            </div>
-            );
+              </div>
+              );
           })}
         </div>
-      </div>
-
-      <div className="min-w-[500px] min-h-[500px] relative left-10">
-          <div className="m-2 p-2 flex justify-end gap-2">
+        <div className={"w-full absolute bottom-[-30%] md:bottom-[-20%] z-10 flex flex-col gap-3"}>
+          {isReplaying && <progress value={replayProgress.current} max="100"></progress>}
+          <div className="flex gap-2">
             <button onClick={resetBoard} className="border bg-black text-white p-2 rounded-md reset-btn">Reset</button>
             {(winner || gameSteps.length == 9 ) && <button onClick={replay} className={"border bg-black text-white p-2 rounded-md reset-btn"}>Replay</button>}
           </div>
-          {isReplaying && <progress value={replayProgress.current} max="100"></progress>}
-          <div className="border m-2 px-10 py-3 min-h-[200px]">
+        </div>
+      </div>
+
+      <div className="w-[300px] min-h-[300px] lg:min-w-[500px] lg:min-h-[500px] relative lg:left-10">
+          
+          
+          {/* <div className="border border m-2 px-10 py-3 min-h-[200px]">
             <h1 className="text-2xl font-bold text-white underline">Game Ladder</h1>
             <div className="my-5">
               {gameSteps.map((step, idx) => {
                 return <p key={idx} onClick={()=> jumpToStep(idx)} className={"cursor-pointer text-lg text-white underline" + ` ml-${idx+1}`}>Move {idx + 1}</p>
               })}
             </div>
-          </div>
+          </div> */}
       </div>
     </div>
   </>;
@@ -326,7 +330,7 @@ export default function Board() {
 
 
 function Square({value, handleClick, isWinnerPlacement} : SquareProps) {
-  return <button className={"square" + (isWinnerPlacement ? " winner-placement" : "")} onClick={handleClick}>
+  return <button className={"square w-[75px] h-[75px] md:w-[100px] md:h-[100px] m-[4px] md:m-[10px]" + (isWinnerPlacement ? " winner-placement" : "")} onClick={handleClick}>
     <span className={value?"opacity-100":"opacity-0"}>{value ?value: 'H'}</span>
   </button>
 }
