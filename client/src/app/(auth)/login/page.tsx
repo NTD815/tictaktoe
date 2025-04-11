@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from 'react';
-import api from "@/utils/axios";
+import api from "@/lib/axios";
 import { useRouter } from 'next/navigation';
-import { setAuthStatus } from '@/utils/auth';
+import { setAuthStatus } from '@/lib/auth';
 
 export default function Login() {
 

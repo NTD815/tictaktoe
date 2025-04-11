@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getAuthStatus } from "@/utils/auth";
+import { getAuthStatus } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 
 const GuestGuard = ({ children }: { children: React.ReactNode }) => {

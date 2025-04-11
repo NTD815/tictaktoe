@@ -1,29 +1,22 @@
-import statusRT from "./status.js";
-import chatRT from "./chat.js";
-import gamespaceRT from "./gamespace.js";
 import matchmakingRT from "./matchmaking.js";
+import { connectionStore } from "./ConnectionStore.js";
+import ConnectionData from "./ConnectionData.js";
 
 export default async function t2oeRT(io) {
+    io.on("connection", (socket) => {
+        console.log("User connected. Connection ID: ", socket.id);
 
-  //defining namespace or modules specific to feature
-  const game = io.of("/game");
-  const chat = io.of("/chat");
-  const status = io.of("/status");
-  const matchmaking = io.of("/matchmaking");
+        const connectionData = new ConnectionData({
+            username: "Test"
+        }, socket);
 
-  status.on("connection", statusRT);
-  chat.on("connection", chatRT);
-  game.on("connection", gamespaceRT);
-  matchmaking.on("connection", matchmakingRT);
-
-  //General connection - global/anyone
-  io.on("connection", (socket) => {
-      console.log("User connected. Connection ID: ", socket.id);
-    
-      socket.on("message", (msg) => {
-        console.log(msg);
-    
-        socket.emit("message", { uid: msg.uid });
-      })
-  });
+        connectionStore().setConnection("testUserId", connectionData);
+        console.log(connectionStore().getConnection("testUserId"));
+        
+        socket.on("message", (msg) => {
+            console.log(msg);
+        
+            socket.emit("message", { uid: msg.uid });
+        })
+    });
 }

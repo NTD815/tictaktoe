@@ -1,8 +1,8 @@
 
-import GuestGuard from "@/components/guestguard";
+import RouteGuard from "@/components/RouteGuard";
 
 export default function GuestLayout({ children }: { children: React.ReactNode }) {
     return (
-        <GuestGuard>{children}</GuestGuard>
+        <RouteGuard accessLevel="guest">{children}</RouteGuard>
     );
 }
