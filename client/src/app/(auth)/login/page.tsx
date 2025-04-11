@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import api from "@/lib/axios";
 import { useRouter } from 'next/navigation';
-import { setAuthStatus } from '@/lib/auth';
+import useAuthStore from "@/store/useAuthStore";
 
 export default function Login() {
 
@@ -14,19 +13,11 @@ export default function Login() {
 
     const router = useRouter();
 
+    const { login } = useAuthStore();
+
     const handleInputsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLoginFormData((prev) => {
             return {...prev, [event.target.name]: event.target.value};
-        });
-    }
-
-    const login = async () => {
-        api.post("/login", loginFormData).then((res: any) => {
-            setAuthStatus();
-            router.push("/");
-        }).catch((err: any) => {
-            console.log(err.response.data.error)
-            alert(err.response.data.error);
         });
     }
 
