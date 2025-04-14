@@ -10,7 +10,7 @@ interface AuthState {
     initialized: boolean;
     setAuth: (user: BaseUser) => void;
     initialize: () => Promise<BaseUser | null>;
-    login: (email: string, password: string) => Promise<BaseUser | null>;
+    login: ({username, password}: {username: string, password: string}) => Promise<BaseUser | null>;
     logout: () => void;
 }
 
@@ -34,8 +34,8 @@ const useAuthStore = create<AuthState>((set, get) => ({
       
       try {
         const res = await api.get('/me');
-        get().setAuth(res.data.user);
-        return res.data.user;
+        get().setAuth(res.data);
+        return res.data;
       } catch (error: any) {
         // Even if it fails, we mark as initialized
         set({ 
@@ -49,20 +49,20 @@ const useAuthStore = create<AuthState>((set, get) => ({
       }
     },
     
-    login: async (email, password) => {
+    login: async ({username, password}) => {
       set({ isLoading: true, error: null });
       
       try {
-        const res = await api.post('/login', { email, password });
+        const res = await api.post('/login', { username, password });
         
         const userRes = await api.get('/me');
-        get().setAuth(userRes.data.user);
+        get().setAuth(userRes.data);
         
-        return userRes.data.user;
+        return userRes.data;
       } catch (error: any) {
         set({ 
           isLoading: false, 
-          error: error.response?.data?.message || error.message 
+          error: error.response?.data?.error || error.message 
         });
         throw error;
       }

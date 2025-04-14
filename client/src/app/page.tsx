@@ -5,11 +5,13 @@ import api from "@/lib/axios";
 import RouteGuard from "@/components/RouteGuard";
 import Link from 'next/link';
 import { socket } from "@/lib/socket";
+import Navbar from "@/components/navbar"
 
 export default function Home() {
 
     return (
-        <RouteGuard accessLevel="auth">
+        <RouteGuard>
+            <Navbar />
             <div className="">
                 
             </div>

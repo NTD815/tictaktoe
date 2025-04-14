@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import Navbar from './navbar';
 import Loader from "@/components/loader";
 import { socket } from "@/lib/socket";
@@ -17,31 +18,27 @@ const RouteGuard = ({
     redirectTo?: string
  }) => {
 
-  const {isAuthenticated, isLoading, initialized} = useAuthStore();
+  const {user, isAuthenticated} = useAuthStore();
   const router = useRouter();
 
-  if (isLoading || !initialized) return <Loader />;
+  useEffect(() => {
+    if(accessLevel === "auth" && !isAuthenticated){
+        router.push(redirectTo);
+    }
+    
+    if(accessLevel === "guest" && isAuthenticated){
+        router.push('/');
+    }
+  }, [isAuthenticated, router]);
 
-  if(accessLevel === "auth" && !isAuthenticated){
-    router.push(redirectTo);
+  if(
+    (accessLevel === "auth" && !isAuthenticated) ||
+    (accessLevel === "guest" && isAuthenticated)
+  ){
+    return null;
   }
 
-  if(accessLevel === "guest" && isAuthenticated){
-    router.push('/');
-  }
-
-  return children;
-
-//   return (
-//     <ReadTimeProvider>
-//         <div>
-//             <Navbar />
-//             <div className="main">
-//             {children}
-//             </div>
-//         </div>
-//     </ReadTimeProvider>
-//   );
+  return <>{children}</>;
 };
 
 export default RouteGuard;

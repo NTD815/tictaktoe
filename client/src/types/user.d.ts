@@ -4,6 +4,6 @@ export interface BaseUser {
 }
 
 export interface AuthData extends BaseUser {
-    id: null,
+    id?: null,
     password: string
 }
