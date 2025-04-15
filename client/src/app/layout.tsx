@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
-import Navbar from '@/components/navbar';
+import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider"
+import { ModeToggle } from "@/components/theme-toggle"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TICTACTOE",
+  title: "Tac2oe",
   description: "Creating TIC TAC TOE with Next.js",
 };
 
@@ -25,15 +27,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh h-dvh`}
       >
-        <AuthProvider>
-            {children}
-        </AuthProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AuthProvider>
+                {children}
+            </AuthProvider>
+        </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

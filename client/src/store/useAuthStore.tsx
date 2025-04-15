@@ -7,6 +7,7 @@ interface AuthState {
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
+    loginError: string | null;
     initialized: boolean;
     setAuth: (user: BaseUser) => void;
     initialize: () => Promise<BaseUser | null>;
@@ -19,6 +20,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     isAuthenticated: false,
     isLoading: true, 
     error: null,
+    loginError: null,
     initialized: false, 
   
     setAuth: (user: BaseUser) => set({ 
@@ -50,7 +52,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     },
     
     login: async ({username, password}) => {
-      set({ isLoading: true, error: null });
+      set({ isLoading: true, loginError: null });
       
       try {
         const res = await api.post('/login', { username, password });
@@ -62,7 +64,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
       } catch (error: any) {
         set({ 
           isLoading: false, 
-          error: error.response?.data?.error || error.message 
+          loginError: error.response?.data?.error || error.message 
         });
         throw error;
       }

@@ -11,9 +11,9 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="top-0 left-0 right-0 px-8 md:px-32 py-5 text-2xl font-bold bg-gradient-to-r from-yellow-300 via-amber-600 to-amber-700 text-white flex justify-around items-center gap-5 select-none">
+        <div className="top-0 left-0 right-0 px-8 md:px-32 py-5 text-2xl font-bold bg-zinc-600 bg-opacity-30 text-white flex justify-around items-center gap-5 select-none">
             <div className="">
-                <Image src="/logo3.png" alt="logo" width={150} height={50}></Image>
+                <Image src="/logo1.png" alt="logo" width={150} height={50}></Image>
             </div>
             <div className="flex flex-grow justify-evenly gap-5">
                 <Link href="/">Home</Link>
