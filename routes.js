@@ -17,6 +17,22 @@ router.post("/register", async (req, res) => {
     try {
         const user = await authService.register(req.body);
 
+        const [accessToken, refreshToken] = await authService.login(req.body);
+
+        //set cookie with refresh and access tokens
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true, 
+            // secure: true, 
+            sameSite: 'lax', // Prevent CSRF
+            maxAge: 15 * 60 * 1000 
+        });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true, 
+            // secure: true, 
+            sameSite: 'lax', // Prevent CSRF
+            maxAge: 24 * 60 * 60 * 1000 
+        });
+
         return res.status(201).json(user);
     }catch(err){
         if(err.code === 11000){

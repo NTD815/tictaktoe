@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import useAuthStore from "@/store/useAuthStore"
 import { AuthData } from "@/types/user"
-import { useToast } from "@/hooks/use-toast"
+import toast from "react-hot-toast"
 
 export function LoginForm({
   className,
@@ -28,8 +28,7 @@ export function LoginForm({
 
     const router = useRouter();
 
-    const { login, isLoading, loginError } = useAuthStore();
-    const { toast } = useToast();
+    const { login, isLoading, loginError, resetError } = useAuthStore();
 
     const handleInputsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLoginFormData((prev) => {
@@ -45,12 +44,16 @@ export function LoginForm({
                 password: loginFormData.password
             }
     
+            const toastId = toast.loading('Logging in...');
+
             try{
                 await login(authData);
+                toast.success('Logged in successfully');
                 router.back();
-                // router.push("/");
             }catch(loginError: any){
                 //
+            }finally{
+                toast.dismiss(toastId);
             }
         }
 
@@ -63,10 +66,9 @@ export function LoginForm({
 
     useEffect(() => {
         if(loginError){
-            toast({
-                variant: "destructive",
-                title: loginError,
-            });
+            toast.error(loginError);
+
+            resetError('loginError');
         }
     }, [loginError]);
 

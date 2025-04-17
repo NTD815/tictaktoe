@@ -13,10 +13,10 @@ export default function Navbar() {
     return (
         <div className="top-0 left-0 right-0 px-8 md:px-32 py-5 text-2xl font-bold bg-zinc-600 bg-opacity-30 text-white flex justify-around items-center gap-5 select-none">
             <div className="">
-                <Image src="/logo1.png" alt="logo" width={150} height={50}></Image>
+                <Image src="/logo1.png" alt="logo" width={150} height={50} priority={true}></Image>
             </div>
             <div className="flex flex-grow justify-evenly gap-5">
-                <Link href="/">Home</Link>
+                <Link href="/" className="hover:underline transition-all">Home</Link>
                 <Link href="/game">Game</Link>
             </div>
             <div className="flex-grow flex justify-end">

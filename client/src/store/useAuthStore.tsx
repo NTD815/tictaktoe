@@ -8,11 +8,14 @@ interface AuthState {
     isLoading: boolean;
     error: string | null;
     loginError: string | null;
+    signupError: string | null;
     initialized: boolean;
     setAuth: (user: BaseUser) => void;
     initialize: () => Promise<BaseUser | null>;
-    login: ({username, password}: {username: string, password: string}) => Promise<BaseUser | null>;
+    login: ({username, password}: AuthData) => Promise<BaseUser | null>;
+    register: ({username, password}: AuthData) => Promise<BaseUser | null>;
     logout: () => void;
+    resetError: (key: string, resetAll?: boolean) => void;
 }
 
 const useAuthStore = create<AuthState>((set, get) => ({
@@ -21,6 +24,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     isLoading: true, 
     error: null,
     loginError: null,
+    signupError: null,
     initialized: false, 
   
     setAuth: (user: BaseUser) => set({ 
@@ -89,22 +93,31 @@ const useAuthStore = create<AuthState>((set, get) => ({
       }
     },
     
-    register: async (userData: AuthData) => {
-      set({ isLoading: true, error: null });
+    register: async (userData) => {
+      set({ isLoading: true, signupError: null });
       
       try {
-        const res = await api.post('/register', userData);
-        
+        await api.post('/register', userData);
+
         const userRes = await api.get('/me');
-        get().setAuth(userRes.data.user);
         
-        return userRes.data.user;
+        get().setAuth(userRes.data);
+        
+        return userRes.data;
       } catch (error: any) {
         set({ 
           isLoading: false, 
-          error: error.response?.data?.message || error.message 
+          signupError: error.response?.data?.message || error.message 
         });
         throw error;
+      }
+    },
+
+    resetError: (key, resetAll = false) => {
+      if (resetAll) {
+        set({ error: null, loginError: null });
+      } else {
+        set({ [key]: null });
       }
     }
   }));
