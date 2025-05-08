@@ -106,7 +106,7 @@ export function SignupForm({
                     </Button>
                 </div>
                 <div className="mt-4 text-center text-sm">
-                    <Link href="/register" className="underline underline-offset-4">
+                    <Link href="/login" className="underline underline-offset-4">
                         Back to login
                     </Link>
                 </div>

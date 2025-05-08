@@ -98,20 +98,11 @@ export function LoginForm({
                 <div className="grid gap-2">
                     <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <a
-                        href="#"
-                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    >
-                        Forgot your password?
-                    </a>
                     </div>
                     <Input id="password" name="password" type="password" onChange={handleInputsChange} required />
                 </div>
                 <Button type="submit" className="w-full">
                     {isLoading ? "Logging in..." : "Login"}
-                </Button>
-                <Button variant="outline" className="w-full">
-                    Login with Google
                 </Button>
                 </div>
                 <div className="mt-4 text-center text-sm">
