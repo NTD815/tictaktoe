@@ -24,6 +24,10 @@ class ConnectionStore{
     removeConnection(userId){
         this.connections.delete(userId);
     }
+
+    totalConnections(){
+        return this.connections.size;
+    }
 }
 
 export const connectionStore = ConnectionStore.getInstance;

@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import api from "@/lib/axios";
 import { BaseUser, AuthData } from "@/types/user"
+import useConnectionStore from './useConnectionStore';
+
+
 
 interface AuthState {
     user: BaseUser | null;
@@ -41,6 +44,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
       try {
         const res = await api.get('/me');
         get().setAuth(res.data);
+        useConnectionStore.getState().upgradeToPresenceChannel(get().user?.id);
         return res.data;
       } catch (error: any) {
         // Even if it fails, we mark as initialized
@@ -63,7 +67,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
         
         const userRes = await api.get('/me');
         get().setAuth(userRes.data);
-        
+        useConnectionStore.getState().upgradeToPresenceChannel(get().user?.id);
         return userRes.data;
       } catch (error: any) {
         set({ 
@@ -79,6 +83,8 @@ const useAuthStore = create<AuthState>((set, get) => ({
       
       try {
         await api.post('/logout');
+
+        useConnectionStore.getState().leavePresenceChannel(get().user?.id);
 
         set({
             user: null,
