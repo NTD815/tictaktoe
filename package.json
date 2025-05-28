@@ -1,26 +1,32 @@
 {
-  "name": "tictactoe",
-  "version": "0.1.0",
-  "private": true,
+  "name": "tac2oeserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "serve": "concurrently \"node --watch --trace-warnings index.js\" \"cd ./client && npm run dev\"",
+    "migrate": "cd ./db && node migrate.js",
+    "migrate:rollback": "cd ./db && node migrate.js --down",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "next": "15.1.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "9.18.0",
-    "eslint-config-next": "15.1.5",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "concurrently": "^9.1.2"
   }
 }
