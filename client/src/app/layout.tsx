@@ -4,7 +4,7 @@ import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
 import { Toaster } from "react-hot-toast"
 import { ThemeProvider } from "@/components/theme-provider"
-import ConnectRT from "@/components/ConnectRT"
+import ConnectManager from "@/components/ConnectManager"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh h-dvh`}
       >
-        <ConnectRT />
+        <ConnectManager />
         <ThemeProvider
             attribute="class"
             defaultTheme="dark"

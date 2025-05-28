@@ -1,7 +1,7 @@
 export default class ConnectionData{
-    constructor(userData, connectionObject){
+    constructor(userData, conn){
         this.userData = userData;
-        this.connectionObject = connectionObject;
+        this.conn = conn;
         this.connectedAt = Date.now();
         this.lastActiveAt = Date.now();
     }

@@ -2,26 +2,29 @@ import { create } from 'zustand';
 import socket from "@/lib/socket";
 
 interface ConnectionState {
-    connectionEstablished: boolean;
+    autoInit: boolean;
+    isConnected: boolean;
     isAuthenticated: boolean;
     totalActiveUsers: number;
     registerSync: () => () => void;
+    registerGlobalListeners: () => () => void;
     connect: () => void;
     disconnect: () => void;
-    upgradeToPresenceChannel: (userId: string | undefined) => void;
-    leavePresenceChannel: (userId: string | undefined) => void;
+    upgradeToPresenceChannel: () => void;
+    leavePresenceChannel: () => void;
 }
 
 const useConnectionStore = create<ConnectionState>((set, get) => ({
-    connectionEstablished: socket.connected,
+    autoInit: false,
+    isConnected: socket.connected,
     isAuthenticated: false,
     totalActiveUsers: 0,
     registerSync: () => {
         const cSync = () => {
-            set({ connectionEstablished: true });
+            set({ isConnected: true });
         }
         const dSync = () => {
-            set({ connectionEstablished: false });
+            set({ isConnected: false });
         }
 
         socket.on("connect", cSync);
@@ -32,13 +35,34 @@ const useConnectionStore = create<ConnectionState>((set, get) => ({
             socket.off("disconnect", dSync);
         }
     },
+
+    registerGlobalListeners: () => {
+        const activeUsers = (activeUsersCount: number) => {
+            set({ totalActiveUsers: activeUsersCount });
+        }
+
+        socket.on("total_active_users", activeUsers);
+
+        return () => {
+            socket.off("total_active_users", activeUsers);
+        }
+    },
     connect: () => {
-        if(!socket.connected) socket.connect();
+        if(!socket.connected){
+            socket.connect();
+            if(!get().autoInit){
+                set({ autoInit: true });
+            }
+        };
     },
     disconnect: () => {
-        if(socket.connected) socket.disconnect();
+        if(socket.connected){
+            console.log("disconnecting...")
+            socket.disconnect()
+        };
     },
-    upgradeToPresenceChannel: (userId) => {
+    upgradeToPresenceChannel: () => {
+        const userId = localStorage.getItem("tactoe_user");
         if(!userId) return;
 
         if (socket.connected) {
@@ -51,11 +75,10 @@ const useConnectionStore = create<ConnectionState>((set, get) => ({
 
         set({ isAuthenticated: true });
     },
-    leavePresenceChannel: (userId) => {
-        if(!userId) return;
+    leavePresenceChannel: () => {
 
         if (socket.connected) {
-            socket.emit("leave_presence_channel", { userId });
+            socket.emit("leave_presence_channel");
         }
 
         set({ isAuthenticated: false });

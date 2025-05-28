@@ -3,8 +3,6 @@ import api from "@/lib/axios";
 import { BaseUser, AuthData } from "@/types/user"
 import useConnectionStore from './useConnectionStore';
 
-
-
 interface AuthState {
     user: BaseUser | null;
     isAuthenticated: boolean;
@@ -19,6 +17,8 @@ interface AuthState {
     register: ({username, password}: AuthData) => Promise<BaseUser | null>;
     logout: () => void;
     resetError: (key: string, resetAll?: boolean) => void;
+    setToLocalStorage: (user: BaseUser) => void;
+    removeFromLocalStorage: () => void;
 }
 
 const useAuthStore = create<AuthState>((set, get) => ({
@@ -36,6 +36,14 @@ const useAuthStore = create<AuthState>((set, get) => ({
       isLoading: false, 
       initialized: true 
     }),
+
+    setToLocalStorage: (user: BaseUser) => {
+      localStorage.setItem('tactoe_user', user.id);
+    },
+
+    removeFromLocalStorage: () => {
+        localStorage.removeItem('tactoe_user');
+    },
   
     // Actions
     initialize: async () => {
@@ -44,7 +52,8 @@ const useAuthStore = create<AuthState>((set, get) => ({
       try {
         const res = await api.get('/me');
         get().setAuth(res.data);
-        useConnectionStore.getState().upgradeToPresenceChannel(get().user?.id);
+        get().setToLocalStorage(res.data);
+        useConnectionStore.getState().upgradeToPresenceChannel();
         return res.data;
       } catch (error: any) {
         // Even if it fails, we mark as initialized
@@ -67,7 +76,8 @@ const useAuthStore = create<AuthState>((set, get) => ({
         
         const userRes = await api.get('/me');
         get().setAuth(userRes.data);
-        useConnectionStore.getState().upgradeToPresenceChannel(get().user?.id);
+        get().setToLocalStorage(userRes.data);
+        useConnectionStore.getState().upgradeToPresenceChannel();
         return userRes.data;
       } catch (error: any) {
         set({ 
@@ -84,7 +94,9 @@ const useAuthStore = create<AuthState>((set, get) => ({
       try {
         await api.post('/logout');
 
-        useConnectionStore.getState().leavePresenceChannel(get().user?.id);
+        useConnectionStore.getState().leavePresenceChannel();
+
+        get().removeFromLocalStorage();
 
         set({
             user: null,
